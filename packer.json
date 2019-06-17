@@ -22,7 +22,7 @@
       "inline_shebang": "/bin/bash -e",
       "inline": [
         "until [[ -f /var/lib/cloud/instance/boot-finished ]]; do sleep 1; done",
-        "sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y python2.7 python && sudo apt-get clean"
+         "export DEBIAN_FRONTEND=noninteractive && sudo -E apt-get update && sudo -E apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade -y && sudo -E apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install -y python2.7 python && sudo -E apt-get clean"
       ]
     },
     {

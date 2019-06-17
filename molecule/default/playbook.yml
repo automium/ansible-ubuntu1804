@@ -20,6 +20,7 @@
         - bzip2
         - gzip
         - git
+        - secure-delete
     - name: install json2hcl
       get_url:
         url: https://github.com/kvz/json2hcl/releases/download/v0.0.6/json2hcl_v0.0.6_linux_amd64
@@ -91,6 +92,19 @@
           datacenter: automium
           server: true
           ui: true
+
+- name: unattend upgrades
+  hosts: all
+  tasks:
+    - name: disable unattend upgrades
+      lineinfile:
+        path: /etc/apt/apt.conf.d/20auto-upgrades
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: present
+      with_items:
+        - { regexp: '^APT::Periodic::Update-Package-Lists', line: 'APT::Periodic::Update-Package-Lists "0";' }
+        - { regexp: '^APT::Periodic::Unattended-Upgrade', line: 'APT::Periodic::Unattended-Upgrade "0";' }
 
 - name: clean up image
   hosts: all
