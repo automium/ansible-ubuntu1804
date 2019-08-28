@@ -20,9 +20,20 @@
     {
       "type": "shell",
       "inline_shebang": "/bin/bash -e",
+      "expect_disconnect": true,
       "inline": [
         "until [[ -f /var/lib/cloud/instance/boot-finished ]]; do sleep 1; done",
-         "export DEBIAN_FRONTEND=noninteractive && sudo -E apt-get update && sudo -E apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade -y && sudo -E apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install -y python2.7 python && sudo -E apt-get clean"
+        "export DEBIAN_FRONTEND=noninteractive && sudo -E apt-get update && sudo -E apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade -y && sudo -E apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' dist-upgrade -y && sudo -E apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install -y python2.7 python",
+        "reboot"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline_shebang": "/bin/bash -e",
+      "pause_before": "10s",
+      "inline": [
+        "export DEBIAN_FRONTEND=noninteractive && dpkg --list | egrep '(linux-image|linux-headers|linux-modules)' | awk '{print $2}' | grep -v `uname -r` | xargs sudo -E apt-get purge -y",
+        "export DEBIAN_FRONTEND=noninteractive && sudo -E apt-get clean -y && sudo -E apt-get autoremove -y"
       ]
     },
     {
