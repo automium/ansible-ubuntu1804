@@ -13,7 +13,8 @@
       "ssh_username": "ubuntu",
       "flavor": "{{user `flavor`}}",
       "networks": [ "{{user `network`}}" ],
-      "floating_ip_pool": "PublicNetwork"
+      "floating_ip_pool": "PublicNetwork",
+      "security_groups": [ "ssh" ]
     }
   ],
   "provisioners": [
@@ -24,7 +25,7 @@
       "inline": [
         "until [[ -f /var/lib/cloud/instance/boot-finished ]]; do sleep 1; done",
         "export DEBIAN_FRONTEND=noninteractive && sudo -E apt-get update && sudo -E apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade -y && sudo -E apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' dist-upgrade -y && sudo -E apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install -y python2.7 python",
-        "reboot"
+        "sudo reboot"
       ]
     },
     {
