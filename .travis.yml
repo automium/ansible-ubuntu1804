@@ -25,14 +25,6 @@ before_deploy:
   - sudo apt-get install qemu-utils -y
   - pip install --upgrade pip
   - pip install python-swiftclient==3.6.0 python-openstackclient==3.17.0
-  - |
-      function keep_alive() {
-        while true; do
-          echo -en "\a"
-          sleep 5
-        done
-      }
-      keep_alive &
 
 deploy:
   - provider: script
