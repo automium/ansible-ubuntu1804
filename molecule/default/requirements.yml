@@ -1,3 +1,3 @@
 ---
-- src: entercloudsuite.consul
-  version: 1.0.2
+- src: automium.consul
+  version: 2.0.3
