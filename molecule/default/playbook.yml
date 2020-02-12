@@ -38,7 +38,7 @@
         script_path: /usr/src/cloud
 
     - name: install system pakage requirements
-      package: 
+      package:
         name: "{{ item }}"
         state: latest
       with_items:
