@@ -1,19 +1,21 @@
 ---
-
 - name: install os prerequisites
   hosts: all
   tasks:
     - name: update repositories cache
       apt:
         update_cache: yes
-    - package: name={{ item }} state=latest
+    - name: install basic systme pakage
+      package:
+        name: "{{ item }}"
+        state: latest
       with_items:
         - curl
         - jq
         - rsyslog
         - ca-certificates
         - sudo
-        - python-apt
+        - python3-apt
         - software-properties-common
         - tar
         - unzip
@@ -21,6 +23,7 @@
         - gzip
         - git
         - secure-delete
+
     - name: install json2hcl
       get_url:
         url: https://github.com/kvz/json2hcl/releases/download/v0.0.6/json2hcl_v0.0.6_linux_amd64
@@ -33,19 +36,26 @@
     - name: create var project path
       set_fact:
         script_path: /usr/src/cloud
-    - name: install requirements
-      package: name="{{ item }}"
+
+    - name: install system pakage requirements
+      package: 
+        name: "{{ item }}"
+        state: latest
       with_items:
         - libffi-dev
         - libssl-dev
-        - python-minimal
-        - python-pip
+        - python3
+        - python3-venv
+        - python3-minimal
+        - python3-pip
         - virtualenv
+
     - name: create directory
       file: path="{{ item }}" state=directory
       with_items:
         - "{{ script_path }}"
         - "{{ script_path }}/roles"
+
     - name: create requirements.txt
       copy:
         content: |
@@ -70,16 +80,21 @@
           dnspython==1.16.0
         dest: "{{ script_path }}/requirements.txt"
         remote_src: yes
-    - name: install python requirements
+
+    - name: install python3 requirements
       pip:
         requirements: "{{ script_path }}/requirements.txt"
         virtualenv: "{{ script_path }}/venv"
+        virtualenv_command: /usr/bin/python3 -m venv
 
 - name: install consul
   hosts: all
   roles:
-    - role: entercloudsuite.consul
-      consul_version: 1.6.1
+    - role: automium.consul
+      configure: false
+      install: true
+      consul_service_status: "stopped"
+      consul_version: 1.6.3
       consul_packer_provision: true
       consul_configs:
         main:
@@ -90,7 +105,7 @@
           encrypt: "K8n07GA/ZoANSmJ5zkvgOg=="
           enable_syslog: true
           datacenter: automium
-          server: true
+          server: "{{ consul_server }}"
           ui: true
 
 - name: unattend upgrades
