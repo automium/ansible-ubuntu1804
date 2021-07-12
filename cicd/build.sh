@@ -6,7 +6,7 @@ set -ex
 export IMAGE_NAME=ubuntu1804-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_IID}
 
 # Build image
-packer build packer.json
+USER=$(whoami) packer build packer.json
 sleep 10
 
 mkdir openstack
