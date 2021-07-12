@@ -2,11 +2,16 @@
 
 set -ex
 
+export USER=$(whoami)
+
 # Set image name
 export IMAGE_NAME=ubuntu1804-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_IID}
 
+# Download roles
+ansible-galaxy install --force -r ./molecule/default/requirements.yml
+
 # Build image
-USER=$(whoami) packer build packer.json
+packer build packer.json
 sleep 10
 
 mkdir openstack
