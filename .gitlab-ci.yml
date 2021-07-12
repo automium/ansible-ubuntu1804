@@ -1,0 +1,15 @@
+---
+stages:
+  - build-image
+
+after_script:
+  - docker volume prune -f
+
+build-image:
+  image: automium/buildenv:bionic
+  stage: build-image
+  script:
+    - bash cicd/build.sh
+  only:
+    refs:
+      - master
