@@ -40,6 +40,7 @@
     {
       "type": "ansible",
       "playbook_file": "./molecule/default/playbook.yml",
+      "user": "ubuntu",
       "ansible_env_vars": [
         "ANSIBLE_BECOME=True", "ANSIBLE_BECOME_METHOD=sudo", "ANSIBLE_BECOME_USER=root", "ANSIBLE_HOST_KEY_CHECKING=False", "ANSIBLE_SSH_ARGS='-o ForwardAgent=yes -o ControlMaster=auto -o ControlPersist=60s'", "ANSIBLE_NOCOLOR=True"
       ]
